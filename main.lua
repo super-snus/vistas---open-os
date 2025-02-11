@@ -72,7 +72,8 @@ while true do
   
   -- Отрисовка всех окон и их перемещение
   DrawWindows(windows)
-
+  event.listen("touch", onTouch)
+  event.listen("drop", onDrop)
   -- Ожидание событий (предотвращает перегрузку процессора)
   event.pull(0.1)
 end
