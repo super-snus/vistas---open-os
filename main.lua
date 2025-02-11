@@ -66,6 +66,10 @@ end
 -- Добавление окна для теста
 addWindow(4, 4, 10, 7, "test window")
 
+-- Привязка обработчиков событий
+event.listen("touch", onTouch)
+event.listen("drop", onDrop)
+
 while true do
   -- Фон рабочего стола
   gpu.setBackground(0x00ff98)
