@@ -5,6 +5,7 @@ local event = require("event")
 local windows = {}
 local WindowHolding = false
 local MouseStartX, MouseStartY
+local DraggingWindow = nil
 
 -- Функция для отслеживания кликов мыши
 function onTouch(_, _, x, y, button, player)
@@ -14,6 +15,7 @@ function onTouch(_, _, x, y, button, player)
       WindowHolding = true
       MouseStartX = x - win.X
       MouseStartY = y - win.Y
+      DraggingWindow = win
       break
     end
   end
@@ -22,6 +24,7 @@ end
 -- Функция для завершения перетаскивания
 function onDrop(_, _, x, y, button, player)
   WindowHolding = false
+  DraggingWindow = nil
 end
 
 -- Функция для создания окна
@@ -42,8 +45,8 @@ end
 function DrawWindows(windows)
   for _, win in ipairs(windows) do
     -- Если окно перетаскивается, обновляем его координаты
-    if WindowHolding then
-      local _, _, mx, my = event.pull("touch")
+    if WindowHolding and DraggingWindow == win then
+      local _, _, mx, my = event.pull("touch")  -- Слушаем события для движения мыши
       local newX = mx - MouseStartX
       local newY = my - MouseStartY
 
@@ -60,20 +63,17 @@ function DrawWindows(windows)
   end
 end
 
+-- Добавление окна для теста
 addWindow(4, 4, 10, 7, "test window")
 
 while true do
   -- Фон рабочего стола
   gpu.setBackground(0x00ff98)
   gpu.fill(1, 1, 120, 120, " ")
-  
-  
-  
-  
+
   -- Отрисовка всех окон и их перемещение
   DrawWindows(windows)
-  event.listen("touch", onTouch)
-  event.listen("drop", onDrop)
+
   -- Ожидание событий (предотвращает перегрузку процессора)
   event.pull(0.1)
 end
