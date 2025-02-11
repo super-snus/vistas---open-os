@@ -2,13 +2,30 @@ local component = require("component")
 local gpu = component.gpu
 local event = require("event")
 
--- Функция для отрисовки окна
+local windows = {}
+
 function addWindow(X, Y, W, H, NAME)
-  gpu.setBackground(0xff7900) -- Оранжевый фон окна
-  gpu.setForeground(0x8b4b11) -- Коричневый цвет текста
-  gpu.fill(X, Y, W, 1, "-")   -- Заголовок окна
-  gpu.fill(X, Y + 1, W, H - 1, " ") -- Тело окна
-  gpu.set(X + 1, Y, NAME)     -- Смещаем имя окна вправо
+  local win = {
+  X = X,
+  Y = Y,
+  W = W,
+  H = H,
+  NAME = NAME,
+  content = {}
+  }
+  table.insert(windows, win)
+  return win
+end
+
+-- Функция для отрисовки окна
+function DrawWindow(windows)
+  for i, win in pairs(windows) do
+    gpu.setBackground(0xff7900) -- Оранжевый фон окна
+    gpu.setForeground(0x8b4b11) -- Коричневый цвет текста
+    gpu.fill(win.X, win.Y, win.W, 1, "-")   -- Заголовок окна
+    gpu.fill(win.X, win.Y + 1, win.W, win.H - 1, " ") -- Тело окна
+    gpu.set(win.X + 1, win.Y, win.NAME)     -- Смещаем имя окна вправо
+  end
 end
 
 while true do
